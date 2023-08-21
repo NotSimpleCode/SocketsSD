@@ -18,7 +18,7 @@ public class Server {
     }
 
     private ServerSocket serverSocket;
-    private int CAPACIDAD = 2;
+    private int CAPACIDAD = 1;
     private ArrayList<CLWaiter> inQueue = new ArrayList<>();
     private ArrayList<CLWorker> inService = new ArrayList<>();
     private ArrayList<Thread> inRunThread = new ArrayList<>();
@@ -114,6 +114,17 @@ public class Server {
 
     }
 
+    private void changeQueueToSupport(int port){
+        for (CLWaiter waiters: inQueue) {
+            try {
+                waiters.setSocket(new Socket("localhost",port));
+            } catch (IOException e) {
+                System.out.println("Error al redirigir servidor");
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     private void chooseClientWay(Socket cliente) throws IOException {
 
         if (isCapacity()) {
@@ -140,6 +151,7 @@ public class Server {
         view2.buildGame();
 
         presenter2.connect(4800);
+        changeQueueToSupport(4800);
         view2.getChat().getInfoServer().setText(presenter2.getServerInfo());
 
         presenter2.setSupport();
@@ -220,25 +232,6 @@ public class Server {
 
     private boolean isQueueClient() {
         return inQueue.size() > 0;
-    }
-
-    private void sortOut(Socket cliente) throws IOException {
-        CLWaiter clwaTemp;
-        if (cliente != null || inRunThread.size() > 0) {
-
-            if (inRunThread.size() > 0 && CAPACIDAD > inService.size()) {
-                inService.add(new CLWorker(cliente));
-                inRunThread.get(0).start();
-                inRunThread.remove(0);
-                System.out.println("Nuevo Cliente conectado! -- Clientes actuales : " + inService.size());
-            } else {
-                if (cliente != null) {
-                    clwaTemp = new CLWaiter(cliente, inRunThread.size());
-                    new Thread(clwaTemp).start();
-                }
-            }
-
-        }
     }
 
     public ArrayList<String> getMsg() {

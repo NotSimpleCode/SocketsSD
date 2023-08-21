@@ -40,4 +40,7 @@ public class CLWaiter extends Thread {
         return socket;
     }
 
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
 }
