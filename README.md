@@ -1,2 +1,0 @@
-# SocketsSD
-cliente servidor TCP
