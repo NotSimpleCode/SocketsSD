@@ -78,7 +78,7 @@ public class CLWorker implements Runnable {
 
     }
 
-    public void read() {
+    public void read() throws IOException {
         while (conexion) {
             try {
 

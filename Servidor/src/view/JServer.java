@@ -44,6 +44,10 @@ public class JServer extends JDialog implements ActionListener {
 
     Chat chat;
 
+    public Chat getChat() {
+        return chat;
+    }
+
     Object game;
 
     private ServerPresenter presenter;
@@ -192,6 +196,7 @@ public class JServer extends JDialog implements ActionListener {
 
         if (e.getActionCommand().equalsIgnoreCase("cancelServer")) {
             this.setVisible(false);
+            System.exit(ABORT);
         }
 
         if (e.getActionCommand().equalsIgnoreCase("stopServer")) {
@@ -211,7 +216,7 @@ public class JServer extends JDialog implements ActionListener {
         return 0;
     }
 
-    private void buildGame() {
+    public void buildGame() {
         try {
             ((Container) game).add(chat, BorderLayout.EAST);
             ((Component) this.game).setName("SERVER");
@@ -223,7 +228,7 @@ public class JServer extends JDialog implements ActionListener {
         }
     }
 
-    private void hideMy() {
+    public void hideMy() {
         if (presenter.isConexion()) {
             this.setVisible(false);
             presenter.startListen();
@@ -245,6 +250,12 @@ public class JServer extends JDialog implements ActionListener {
             int port = 0;
             try {
                 port = Integer.parseInt(portField.getText());
+
+                if(port == 4800){
+                    showInfo("Se usara el puerto 4900 porque el 4800 es el puerto para el servidor de soporte");
+                    port = 4900;
+                }
+
             } catch (Exception e4) {
                 showInfo("Se usaran los valores por defecto para el puerto");
             }

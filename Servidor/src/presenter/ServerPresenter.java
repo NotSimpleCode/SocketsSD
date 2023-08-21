@@ -105,5 +105,9 @@ public class ServerPresenter {
             view.showInfo("No se pudo detener el servidor");
         }
     }
+
+    public void setSupport() {
+        model.setSupport();
+    }
     
 }

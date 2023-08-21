@@ -69,8 +69,10 @@ public class ClientPresenter {
 
     public void stopClient() {
         try {
+            
             model.getSocket().close();
             model = null;
+
             view.showInfo("Se pudo cerrar la conexion!");
         } catch (IOException e) {
             view.showInfo("No se pudo eliminar el cliente");

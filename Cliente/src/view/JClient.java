@@ -178,6 +178,7 @@ public class JClient extends JDialog implements ActionListener {
         if (e.getActionCommand().equalsIgnoreCase("setColor")) {
             viewCli = new ColorChooser(this);
         }
+        //envia el mensaje
         if (e.getActionCommand().equalsIgnoreCase("send")) {
             try {
                 presenter.sendMSG(chat.getTxtSendMSG().getText());
@@ -188,6 +189,7 @@ public class JClient extends JDialog implements ActionListener {
 
         if (e.getActionCommand().equalsIgnoreCase("cancelClient")) {
             this.setVisible(false);
+            System.exit(ABORT);
         }
 
         if (e.getActionCommand().equalsIgnoreCase("stopClient")) {

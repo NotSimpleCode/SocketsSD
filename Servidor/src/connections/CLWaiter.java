@@ -20,6 +20,7 @@ public class CLWaiter extends Thread {
     public void run() {
         try {
             this.out.writeUTF("Gracias por esperar, posicion en cola : "+pos);
+            //TO DO
             System.out.println("Alguien esta en espera");
         } catch (IOException e) {
             System.out.println("Se desconecto alguien que estaba en espera");
@@ -33,6 +34,10 @@ public class CLWaiter extends Thread {
 
     public void setPos(int i) {
         this.pos = i;
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 
 }
