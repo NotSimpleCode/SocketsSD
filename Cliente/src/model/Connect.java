@@ -8,7 +8,7 @@ import java.net.Socket;
 import connections.Options;
 
 public class Connect {
-    
+
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
@@ -17,56 +17,53 @@ public class Connect {
         this.out.writeInt(color);
     }
 
-    public Socket getSocket(){
+    public Socket getSocket() {
         return socket;
     }
 
     public Connect() {
         try {
-            this.socket = new Socket("localhost",4900);
+            this.socket = new Socket("localhost", 4900);
             this.in = new DataInputStream(this.socket.getInputStream());
             this.out = new DataOutputStream(this.socket.getOutputStream());
-            
+
         } catch (Exception e) {
-            System.out.println("El servidor se encuentra en mantenimiento...");;
+            System.out.println("El servidor se encuentra en mantenimiento...");
         }
-        
+
     }
 
     public Connect(int port) {
         try {
-            this.socket = new Socket("localhost",port);
+            this.socket = new Socket("localhost", port);
             this.in = new DataInputStream(this.socket.getInputStream());
             this.out = new DataOutputStream(this.socket.getOutputStream());
         } catch (Exception e) {
-            System.out.println("El servidor se encuentra en mantenimiento...");;
         }
-        
+
     }
 
     public Connect(int port, String host) {
         try {
-            this.socket = new Socket(host,port);
+            this.socket = new Socket(host, port);
             this.in = new DataInputStream(this.socket.getInputStream());
             this.out = new DataOutputStream(this.socket.getOutputStream());
         } catch (Exception e) {
-            System.out.println("El servidor se encuentra en mantenimiento...");;
         }
-        
+
     }
 
     public Connect(String host) {
         try {
-            this.socket = new Socket(host,4900);
+            this.socket = new Socket(host, 4900);
             this.in = new DataInputStream(this.socket.getInputStream());
             this.out = new DataOutputStream(this.socket.getOutputStream());
         } catch (Exception e) {
-            System.out.println("El servidor se encuentra en mantenimiento...");;
         }
-        
+
     }
 
-    public String readMsg() throws IOException{
+    public String readMsg() throws IOException {
         String textoServer = "vacio";
 
         try {
@@ -83,7 +80,7 @@ public class Connect {
         return textoServer;
     }
 
-    public String readJson() throws IOException{
+    public String readJson() throws IOException {
         String json = "";
         try {
             json = this.in.readUTF();
@@ -94,7 +91,7 @@ public class Connect {
         return json;
     }
 
-    public void sendJson(String json) throws IOException{
+    public void sendJson(String json) throws IOException {
         try {
             this.out.writeUTF(json);
         } catch (Exception e) {
@@ -103,7 +100,7 @@ public class Connect {
         }
     }
 
-    public void closeConnect(){
+    public void closeConnect() {
         try {
             this.out.writeUTF(Options.CLOSE.toString());
             this.socket.close();
@@ -118,7 +115,7 @@ public class Connect {
             String response = this.in.readUTF();
             if (response.equalsIgnoreCase("Has logrado ingresar a nuestros servicios!")) {
                 return false;
-            }else{
+            } else {
                 System.out.println(response);
             }
 
@@ -129,6 +126,12 @@ public class Connect {
         return true;
     }
 
-
+    public String getConnectionStatus() {
+        if (socket != null && socket.isConnected()) {
+            return "Conexión exitosa";
+        } else {
+            return "El servidor se encuentra en mantenimiento...";
+        }
+    }
 
 }

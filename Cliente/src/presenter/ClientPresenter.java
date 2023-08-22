@@ -7,16 +7,16 @@ import view.JClient;
 
 public class ClientPresenter {
 
-	private JClient view;
-	private Connect model;
-	
-	public ClientPresenter(JClient view, Connect model) {
-		super();
-		this.view = view;
-		this.model = model;
-	}
-	
-	public void setView(JClient view) {
+    private JClient view;
+    private Connect model;
+
+    public ClientPresenter(JClient view, Connect model) {
+        super();
+        this.view = view;
+        this.model = model;
+    }
+
+    public void setView(JClient view) {
         this.view = view;
     }
 
@@ -27,11 +27,10 @@ public class ClientPresenter {
     public ClientPresenter() {
     }
 
-
     public void sendMSG(String text) throws IOException {
-        if(model.getSocket() != null && !model.getSocket().isClosed()){
+        if (model.getSocket() != null && !model.getSocket().isClosed()) {
             this.model.sendJson(text);
-        }else {
+        } else {
             view.showInfo("no hay conexion");
             if (view.showYes() == 0) {
                 this.model = new Connect();
@@ -43,7 +42,7 @@ public class ClientPresenter {
         model.setColor(i);
     }
 
-    public boolean isConexion(){
+    public boolean isConexion() {
         return model.getSocket() != null;
     }
 
@@ -52,24 +51,26 @@ public class ClientPresenter {
     }
 
     public void connect(String ip, int port) {
+        model = null;
         if (ip.equalsIgnoreCase("")) {
             if (port == 0) {
                 retryCon();
-            }else{
+            } else {
                 model = new Connect(port);
             }
-        }else{
+        } else {
             if (port == 0) {
                 model = new Connect(ip);
-            }else{
+            } else {
                 model = new Connect(port, ip);
             }
         }
+        view.showInfo(model.getConnectionStatus());
     }
 
     public void stopClient() {
         try {
-            
+
             model.getSocket().close();
             model = null;
 
@@ -78,5 +79,9 @@ public class ClientPresenter {
             view.showInfo("No se pudo eliminar el cliente");
         }
     }
-    
+
+    public void showInfo(String msg) {
+        view.showInfo(msg);
+    }
+
 }

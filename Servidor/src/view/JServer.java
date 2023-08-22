@@ -37,10 +37,12 @@ public class JServer extends JDialog implements ActionListener {
     JLabel title;
     JLabel IP;
     JLabel port;
+    JLabel capacity;
     JLabel message;
 
     JTextField portField;
     JTextField ipField;
+    JTextField capacityField;
 
     Chat chat;
 
@@ -54,7 +56,7 @@ public class JServer extends JDialog implements ActionListener {
 
     public JServer() {
 
-        setSize(400, 310);
+        setSize(400, 330);
         setLocation(200, 100);
         setResizable(false);
 
@@ -83,7 +85,6 @@ public class JServer extends JDialog implements ActionListener {
 
         add(down, BorderLayout.SOUTH);
 
-        // this.setVisible(true);
     }
 
     public void setPresenter(ServerPresenter presenter) throws IOException {
@@ -103,9 +104,12 @@ public class JServer extends JDialog implements ActionListener {
         port = new JLabel("Port:");
         port.setBounds(IP.getX(), IP.getY() + 40, 70, 20);
 
+        capacity = new JLabel("Capacity:");
+        capacity.setBounds(port.getX(), port.getY() + 40, 100, 30);
+
         message = new JLabel("<<<MESSAGE>>>");
         message.setBackground(Color.red);
-        message.setBounds(port.getX(), port.getY() + 40, 100, 30);
+        message.setBounds(capacity.getX(), capacity.getY() + 40, 100, 30);
 
         run = new JButton("Run");
         run.setBounds(40, 10, 70, 30);
@@ -120,15 +124,17 @@ public class JServer extends JDialog implements ActionListener {
         ipField = new JTextField();
         ipField.setBounds(IP.getX() + 70, IP.getY(), 140, 20);
         try {
-            ipField.setText(""+InetAddress.getLocalHost());
+            ipField.setText("" + InetAddress.getLocalHost());
         } catch (UnknownHostException e) {
             showInfo("NO se encontro IP para este equipo");
         }
         ipField.setEditable(false);
 
-
         portField = new JTextField();
         portField.setBounds(port.getX() + 70, port.getY(), 40, 20);
+
+        capacityField = new JTextField();
+        capacityField.setBounds(capacity.getX() + 70, capacity.getY(), 40, 20);
 
         listeners();
 
@@ -149,7 +155,7 @@ public class JServer extends JDialog implements ActionListener {
         stop.addActionListener(this);
         cancel.addActionListener(this);
 
-        //this.chat.setListeners(this);
+        // this.chat.setListeners(this);
     }
 
     private void add() {
@@ -158,8 +164,10 @@ public class JServer extends JDialog implements ActionListener {
 
         mid.add(IP);
         mid.add(port);
+        mid.add(capacity);
         mid.add(ipField);
         mid.add(portField);
+        mid.add(capacityField);
         mid.add(message);
 
         down.add(run);
@@ -202,7 +210,7 @@ public class JServer extends JDialog implements ActionListener {
         if (e.getActionCommand().equalsIgnoreCase("stopServer")) {
             try {
                 presenter.stopServer();
-                if(showForceStop() == 0){
+                if (showForceStop() == 0) {
                     presenter.forceStop();
                 }
             } catch (Exception e1) {
@@ -210,7 +218,6 @@ public class JServer extends JDialog implements ActionListener {
             }
         }
     }
-
 
     private int showForceStop() {
         return 0;
@@ -221,7 +228,7 @@ public class JServer extends JDialog implements ActionListener {
             ((Container) game).add(chat, BorderLayout.EAST);
             ((Component) this.game).setName("SERVER");
             ((Component) this.game).setVisible(true);
-            System.out.println("Se ha cargado un juego previamente");
+            showInfo("Se ha cargado un juego previamente");
         } catch (Exception e2) {
             this.game = new Game();
             ((Container) game).add(chat, BorderLayout.EAST);
@@ -245,13 +252,23 @@ public class JServer extends JDialog implements ActionListener {
         }
     }
 
+    private void setCapacity() {
+        int capacity = 0;
+        try {
+            capacity = Integer.parseInt(capacityField.getText());
+        } catch (Exception e) {
+            showInfo("Se usara la capacidad por defecto");
+        }
+        presenter.setCapacity(capacity);
+    }
+
     private void createServer() {
         try {
             int port = 0;
             try {
                 port = Integer.parseInt(portField.getText());
 
-                if(port == 4800){
+                if (port == 4800) {
                     showInfo("Se usara el puerto 4900 porque el 4800 es el puerto para el servidor de soporte");
                     port = 4900;
                 }
@@ -260,13 +277,13 @@ public class JServer extends JDialog implements ActionListener {
                 showInfo("Se usaran los valores por defecto para el puerto");
             }
             presenter.connect(port);
+            setCapacity();
             chat.getInfoServer().setText(presenter.getServerInfo());
-            
+
         } catch (Exception e3) {
             showInfo("Puerto NO valido");
         }
     }
-
 
     public void showInfo(String info) {
         JOptionPane.showMessageDialog(null, info, info, JOptionPane.INFORMATION_MESSAGE);
@@ -285,4 +302,5 @@ public class JServer extends JDialog implements ActionListener {
     public void showClients(ArrayList<CLWorker> inService) {
         chat.setClients(inService);
     }
+
 }

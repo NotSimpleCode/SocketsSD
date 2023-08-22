@@ -14,12 +14,11 @@ import javax.swing.JOptionPane;
 import connections.CLWorker;
 import presenter.ServerPresenter;
 
-public class ServerView extends JFrame implements ActionListener{
+public class ServerView extends JFrame implements ActionListener {
 
 	Chat chat;
 
 	Object game;
-
 
 	public ServerPresenter getPresenter() {
 		return presenter;
@@ -30,8 +29,7 @@ public class ServerView extends JFrame implements ActionListener{
 	public ServerView() {
 		super();
 		presenter = new ServerPresenter();
-		this.setSize(700,700);
-		
+		this.setSize(700, 700);
 
 		initComponents();
 
@@ -45,18 +43,18 @@ public class ServerView extends JFrame implements ActionListener{
 	}
 
 	private void setListeners() {
-		//this.chat.setListeners(this);
+		// this.chat.setListeners(this);
 	}
 
-	public void start(){
+	public void start() {
 		setVisible(true);
 	}
 
-	public void updateMSG(){
+	public void updateMSG() {
 		StringBuilder str = new StringBuilder();
 		ArrayList<String> msg = presenter.readMSG();
 
-		if(msg != null){
+		if (msg != null) {
 			for (int i = 0; i < msg.size(); i++) {
 				str.append(msg.get(i) + "\n");
 			}
@@ -64,23 +62,22 @@ public class ServerView extends JFrame implements ActionListener{
 				chat.getTxtGetMSG().setText(str.toString());
 			}
 		}
-		
+
 	}
 
 	private void initComponents() {
-		
+
 		chat = new Chat();
 		try {
-			((Container) game).add(chat,BorderLayout.EAST);
+			((Container) game).add(chat, BorderLayout.EAST);
 			System.out.println("se cargo un juego previamente para el server");
 			((Component) game).setVisible(true);
 		} catch (Exception e) {
 			game = new Game();
-			((Container) game).add(chat,BorderLayout.EAST);
+			((Container) game).add(chat, BorderLayout.EAST);
 		}
-		
-	}
 
+	}
 
 	public void showMessage(String msg) {
 		System.out.println(msg);
@@ -100,19 +97,20 @@ public class ServerView extends JFrame implements ActionListener{
 				showInfo("Conexion no lograda");
 			}
 		}
-		
+
 	}
 
-	public void showInfo(String info){
+	public void showInfo(String info) {
 		JOptionPane.showMessageDialog(null, info, info, JOptionPane.INFORMATION_MESSAGE);
 	}
 
-    public int showYes() {
-        return JOptionPane.showConfirmDialog(null, "Desea intentar conectar¿", "Conexion No establecida", JOptionPane.OK_OPTION);
-    }
+	public int showYes() {
+		return JOptionPane.showConfirmDialog(null, "Desea intentar conectar¿", "Conexion No establecida",
+				JOptionPane.OK_OPTION);
+	}
 
-    public void showClients(ArrayList<CLWorker> inService) {
+	public void showClients(ArrayList<CLWorker> inService) {
 		chat.setClients(inService);
-    }
+	}
 
 }

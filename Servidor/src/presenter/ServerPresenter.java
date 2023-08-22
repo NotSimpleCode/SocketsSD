@@ -9,16 +9,16 @@ import view.JServer;
 
 public class ServerPresenter {
 
-	private JServer view;
-	private Server model;
-	
-	public ServerPresenter(JServer view, Server model) {
-		super();
-		this.view = view;
-		this.model = model;
-	}
-	
-	public void setView(JServer view) {
+    private JServer view;
+    private Server model;
+
+    public ServerPresenter(JServer view, Server model) {
+        super();
+        this.view = view;
+        this.model = model;
+    }
+
+    public void setView(JServer view) {
         this.view = view;
     }
 
@@ -30,14 +30,14 @@ public class ServerPresenter {
     }
 
     public void sendMSG(String text) throws IOException {
-        
+
     }
 
     public ArrayList<String> readMSG() {
         return model.getMsg();
     }
-    
-	public String getServerInfo() throws IOException{
+
+    public String getServerInfo() throws IOException {
         return "Port : " + model.getServerSocket().getLocalPort() + " Running ON: localhost";
     }
 
@@ -48,27 +48,26 @@ public class ServerPresenter {
      * @param json texto en cualquier formato, preferible json para objetos
      */
     public void updateMSG(String json) {
- 
-    	model.getMsg().add(json);
+
+        model.getMsg().add(json);
         view.updateMSG();
-        
-        
+
     }
 
     public void updateClients(ArrayList<CLWorker> inService) {
         view.showClients(inService);
     }
 
-	public JServer getView() {
-		return view;
-	}
+    public JServer getView() {
+        return view;
+    }
 
-	public Server getModel() {
-		return model;
-	}
+    public Server getModel() {
+        return model;
+    }
 
     public boolean isConexion() {
-        if (model.getServerSocket() != null){
+        if (model.getServerSocket() != null) {
             return true;
         }
         return false;
@@ -109,5 +108,17 @@ public class ServerPresenter {
     public void setSupport() {
         model.setSupport();
     }
-    
+
+    public void setCapacity(int capacity) {
+        if (capacity == 0) {
+            model.setCapacity(1);
+        } else {
+            model.setCapacity(capacity);
+        }
+    }
+
+    public void showInfo(String msg){
+        view.showInfo(msg);
+    }
+
 }

@@ -18,13 +18,13 @@ public class Server {
     }
 
     private ServerSocket serverSocket;
-    private int CAPACIDAD = 2;
     private ArrayList<CLWaiter> inQueue = new ArrayList<>();
     private ArrayList<CLWorker> inService = new ArrayList<>();
     private ArrayList<Thread> inRunThread = new ArrayList<>();
     private ArrayList<String> msg = new ArrayList<>();
     private ServerPresenter presenter;
     private boolean support = false;
+    private int capacity;
 
     public void setSupport() {
         this.support = true;
@@ -35,7 +35,7 @@ public class Server {
             this.serverSocket = new ServerSocket(4900);
             this.serverSocket.setSoTimeout(1000000000);
         } catch (IOException e) {
-            System.out.println("puerto del servidor ocupado");
+            presenter.showInfo("puerto del servidor ocupado");
         }
     }
 
@@ -44,7 +44,7 @@ public class Server {
             this.serverSocket = new ServerSocket(port);
             this.serverSocket.setSoTimeout(timeOut);
         } catch (IOException e) {
-            System.out.println("puerto del servidor ocupado");
+            presenter.showInfo("puerto del servidor ocupado");
         }
     }
 
@@ -53,7 +53,7 @@ public class Server {
             this.serverSocket = new ServerSocket(port);
             this.serverSocket.setSoTimeout(1000000000);
         } catch (IOException e) {
-            System.out.println("puerto del servidor ocupado");
+            presenter.showInfo("puerto del servidor ocupado");
         }
     }
 
@@ -81,7 +81,7 @@ public class Server {
                         }
 
                     }
-                    //cerrar el servidor
+                    // cerrar el servidor
                 }
             };
             t3.start();
@@ -146,12 +146,10 @@ public class Server {
 
         view2.hideMy();
 
-
-
     }
 
     protected boolean isLimitQueue() {
-        return inQueue.size() > CAPACIDAD;
+        return inQueue.size() > capacity;
     }
 
     protected void addToQueue(Socket cliente) {
@@ -165,7 +163,7 @@ public class Server {
     }
 
     private boolean isCapacity() {
-        return inService.size() < this.CAPACIDAD;
+        return inService.size() < this.capacity;
     }
 
     public void addClient(Socket cliente) throws IOException {
@@ -182,7 +180,7 @@ public class Server {
 
             th1Temp.start();
 
-            System.out.println("Nuevo Cliente conectado! -- Clientes actuales : " + inRunThread.size());
+            presenter.showInfo("Nuevo Cliente conectado! -- Clientes actuales : " + inRunThread.size());
 
         }
     }
@@ -192,7 +190,7 @@ public class Server {
         try {
             cliente = this.serverSocket.accept();
         } catch (SocketTimeoutException e) {
-            System.out.println(
+            presenter.showInfo(
                     "Paso el tiempo limite en segundos sin recibir peticiones, revisando colas de servicio y de espera...");
             presenter.updateClients(inService);
         }
@@ -204,7 +202,7 @@ public class Server {
             if (!inRunThread.get(i).isAlive() || !inService.get(i).isConexion()) {
                 inRunThread.remove(i);
                 inService.remove(i); // se remueve un cliente
-                System.out.println("Un Cliente desconectado! -- Clientes actuales : " + inRunThread.size());
+                presenter.showInfo("Un Cliente desconectado! -- Clientes actuales : " + inRunThread.size());
 
                 if (isQueueClient()) {
                     // agregamos el cliente que este en cola si hay espacio en el servidor
@@ -226,7 +224,7 @@ public class Server {
         CLWaiter clwaTemp;
         if (cliente != null || inRunThread.size() > 0) {
 
-            if (inRunThread.size() > 0 && CAPACIDAD > inService.size()) {
+            if (inRunThread.size() > 0 && capacity > inService.size()) {
                 inService.add(new CLWorker(cliente));
                 inRunThread.get(0).start();
                 inRunThread.remove(0);
@@ -269,6 +267,14 @@ public class Server {
 
     public void stop() {
         running = false;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
     }
 
 }

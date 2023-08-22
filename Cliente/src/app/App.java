@@ -6,21 +6,19 @@ import view.JClient;
 public class App {
     public static void main(String[] args) throws Exception {
 
+        ClientPresenter presenter = new ClientPresenter();
+        JClient view = new JClient();
+
+        presenter.setView(view);
+        view.setPresenter(presenter);
+
         try {
-            ClientPresenter presenter = new ClientPresenter();
-            JClient view = new JClient();
-
-            
-            presenter.setView(view);
-
-            view.setPresenter(presenter);
 
             view.start();
 
         } catch (Exception e) {
-            System.out.println("Por favor intente mas tarde...");
+            view.showInfo("Por favor intente mas tarde...");
         }
     }
 
-    
 }

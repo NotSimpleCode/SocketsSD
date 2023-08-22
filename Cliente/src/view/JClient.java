@@ -54,7 +54,6 @@ public class JClient extends JDialog implements ActionListener {
         setLocation(200, 100);
         setResizable(false);
 
-        
         top = new JPanel();
         mid = new JPanel();
         down = new JPanel();
@@ -62,19 +61,17 @@ public class JClient extends JDialog implements ActionListener {
         top.setBackground(Color.gray);
         down.setBackground(Color.gray);
 
-
         top.setLayout(null);
         mid.setLayout(null);
         down.setLayout(null);
 
-        top.setPreferredSize(new Dimension(1,40));
-        
-        mid.setPreferredSize(new Dimension(1,200));
+        top.setPreferredSize(new Dimension(1, 40));
 
-        down.setPreferredSize(new Dimension(1,70));
+        mid.setPreferredSize(new Dimension(1, 200));
+
+        down.setPreferredSize(new Dimension(1, 70));
 
         initComponents();
-
 
         add(top, BorderLayout.NORTH);
 
@@ -82,7 +79,7 @@ public class JClient extends JDialog implements ActionListener {
 
         add(down, BorderLayout.SOUTH);
 
-        //this.setVisible(true);
+        // this.setVisible(true);
     }
 
     public void setPresenter(ClientPresenter presenter) {
@@ -108,7 +105,6 @@ public class JClient extends JDialog implements ActionListener {
         choosedColor = new JButton();
         choosedColor.setBounds(color.getX() + color.getWidth() + 10, color.getY(), 40, 40);
         choosedColor.setBackground(Color.BLACK);
-        
 
         selectColor = new JButton("Select");
         selectColor.setBounds(choosedColor.getX() + choosedColor.getWidth() + 40, color.getY(), 70, 30);
@@ -133,7 +129,6 @@ public class JClient extends JDialog implements ActionListener {
 
         add();
 
-
     }
 
     public void setGame(Object game) {
@@ -151,12 +146,10 @@ public class JClient extends JDialog implements ActionListener {
         stop.addActionListener(this);
         cancel.addActionListener(this);
 
-
         this.chat.setListeners(this);
     }
 
     private void add() {
-
 
         top.add(title);
 
@@ -178,7 +171,7 @@ public class JClient extends JDialog implements ActionListener {
         if (e.getActionCommand().equalsIgnoreCase("setColor")) {
             viewCli = new ColorChooser(this);
         }
-        //envia el mensaje
+        // envia el mensaje
         if (e.getActionCommand().equalsIgnoreCase("send")) {
             try {
                 presenter.sendMSG(chat.getTxtSendMSG().getText());
@@ -202,7 +195,7 @@ public class JClient extends JDialog implements ActionListener {
 
         if (e.getActionCommand().equalsIgnoreCase("runClient")) {
             try {
-                
+
                 connectTo();
 
                 if (presenter.isConexion()) {
@@ -236,7 +229,7 @@ public class JClient extends JDialog implements ActionListener {
     private void buildGame() {
         this.setVisible(false);
         try {
-            //((Component) game).setVisible(false);
+            // ((Component) game).setVisible(false);
             ((Container) game).add(chat, BorderLayout.EAST);
             ((Component) this.game).setName("CLIENT");
             ((Component) this.game).setVisible(true);
