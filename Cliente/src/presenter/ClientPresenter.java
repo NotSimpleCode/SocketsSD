@@ -35,6 +35,7 @@ public class ClientPresenter {
             view.showInfo("no hay conexion");
             if (view.showYes() == 0) {
                 this.model = new Connect();
+                this.model.setColor(model.getColor());
             }
         }
     }
@@ -67,6 +68,8 @@ public class ClientPresenter {
         }
     }
 
+
+
     public void stopClient() {
         try {
             
@@ -77,6 +80,10 @@ public class ClientPresenter {
         } catch (IOException e) {
             view.showInfo("No se pudo eliminar el cliente");
         }
+    }
+
+    public void startListen() {
+        model.startListen();
     }
     
 }
