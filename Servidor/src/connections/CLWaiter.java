@@ -9,6 +9,7 @@ public class CLWaiter extends Thread {
     private Socket socket;
     private DataOutputStream out;
     private int pos;
+    private boolean redirect = false;
 
     public CLWaiter(Socket socket, int pos) throws IOException {
         this.socket = socket;
@@ -19,13 +20,36 @@ public class CLWaiter extends Thread {
     @Override
     public void run() {
         try {
-            this.out.writeUTF("Gracias por esperar, posicion en cola : "+pos);
-            //TO DO
+            // envia un mensaje
+            this.out.writeUTF("Gracias por esperar, posicion en cola : " + pos);
+            // TO DO
             System.out.println("Alguien esta en espera");
+            Thread thWaiter = new Thread() {
+                @Override
+                public void run() {
+                    do {
+                        if (redirect) {
+                            redirectToServer();
+                        }
+                    } while (!redirect);
+                }
+
+            };
+            thWaiter.start();
+
         } catch (IOException e) {
             System.out.println("Se desconecto alguien que estaba en espera");
         }
-        
+
+    }
+
+    protected void redirectToServer() {
+        try {
+            this.out.writeUTF("redirect");
+        } catch (IOException e) {
+            System.out.println("No se pudo redirigir al cliente");
+            e.printStackTrace();
+        }
     }
 
     public int getPos() {
@@ -38,6 +62,10 @@ public class CLWaiter extends Thread {
 
     public Socket getSocket() {
         return socket;
+    }
+
+    public void redirect() {
+        this.redirect = true;
     }
 
 }

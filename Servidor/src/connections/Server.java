@@ -18,13 +18,15 @@ public class Server {
     }
 
     private ServerSocket serverSocket;
-    private int CAPACIDAD = 2;
+    private int CAPACIDAD = 1;
     private ArrayList<CLWaiter> inQueue = new ArrayList<>();
     private ArrayList<CLWorker> inService = new ArrayList<>();
     private ArrayList<Thread> inRunThread = new ArrayList<>();
     private ArrayList<String> msg = new ArrayList<>();
     private ServerPresenter presenter;
     private boolean support = false;
+    private int servers = 0;
+    private boolean fin = false;
 
     public void setSupport() {
         this.support = true;
@@ -60,12 +62,13 @@ public class Server {
     public void startListening() throws IOException {
 
         if (support) {
+            
             System.out.println("Servidor de respaldo ejecutandose...");
 
             Thread t3 = new Thread() {
                 @Override
                 public void run() {
-                    while (true) {
+                    while (!fin) {
 
                         try {
 
@@ -121,13 +124,14 @@ public class Server {
         } else {
             addToQueue(cliente);
 
-            if (isLimitQueue()) {
+            if (isLimitQueue() && servers == 0) {
                 startSupportServer();
             }
         }
     }
 
     protected void startSupportServer() throws IOException {
+        servers++;
         ServerPresenter presenter2 = new ServerPresenter();
         JServer view2 = new JServer();
 
@@ -147,7 +151,13 @@ public class Server {
         view2.hideMy();
 
 
+        sendMyClientsInQueue();
+    }
 
+    private void sendMyClientsInQueue() {
+        for (int i = 0; i < this.CAPACIDAD; i++) {
+            inQueue.get(i).redirect();
+        }
     }
 
     protected boolean isLimitQueue() {
@@ -156,7 +166,11 @@ public class Server {
 
     protected void addToQueue(Socket cliente) {
         try {
-            inQueue.add(new CLWaiter(cliente, inQueue.size() + 1));
+            CLWaiter temp = new CLWaiter(cliente, inQueue.size() + 1);
+            inQueue.add(temp);
+            //crear hilo que habla con el que espera
+            Thread cola = new Thread(temp);
+            cola.start();
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -216,29 +230,14 @@ public class Server {
 
             }
         }
+        if (support && inService.size() == 0) {
+            fin = true;
+            System.out.println("Servidor de soporte desactivado");
+        }
     }
 
     private boolean isQueueClient() {
         return inQueue.size() > 0;
-    }
-
-    private void sortOut(Socket cliente) throws IOException {
-        CLWaiter clwaTemp;
-        if (cliente != null || inRunThread.size() > 0) {
-
-            if (inRunThread.size() > 0 && CAPACIDAD > inService.size()) {
-                inService.add(new CLWorker(cliente));
-                inRunThread.get(0).start();
-                inRunThread.remove(0);
-                System.out.println("Nuevo Cliente conectado! -- Clientes actuales : " + inService.size());
-            } else {
-                if (cliente != null) {
-                    clwaTemp = new CLWaiter(cliente, inRunThread.size());
-                    new Thread(clwaTemp).start();
-                }
-            }
-
-        }
     }
 
     public ArrayList<String> getMsg() {

@@ -196,7 +196,7 @@ public class JServer extends JDialog implements ActionListener {
 
         if (e.getActionCommand().equalsIgnoreCase("cancelServer")) {
             this.setVisible(false);
-            System.exit(ABORT);
+            //System.exit(ABORT);
         }
 
         if (e.getActionCommand().equalsIgnoreCase("stopServer")) {

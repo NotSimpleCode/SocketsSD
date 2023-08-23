@@ -256,6 +256,7 @@ public class JClient extends JDialog implements ActionListener {
                 showInfo("Se usaran los valores por defecto para el puerto");
             }
             presenter.connect(ipField.getText(), port);
+            presenter.startListen();
         } catch (Exception e3) {
             showInfo("Conexion No Valido");
         }
