@@ -35,7 +35,7 @@ public class Connect {
 
         } catch (Exception e) {
             System.out.println("El servidor se encuentra en mantenimiento...");
-            
+
         }
 
     }
@@ -47,7 +47,7 @@ public class Connect {
             this.out = new DataOutputStream(this.socket.getOutputStream());
         } catch (Exception e) {
             System.out.println("El servidor se encuentra en mantenimiento...");
-            
+
         }
 
     }
@@ -59,7 +59,7 @@ public class Connect {
             this.out = new DataOutputStream(this.socket.getOutputStream());
         } catch (Exception e) {
             System.out.println("El servidor se encuentra en mantenimiento...");
-            
+
         }
 
     }
@@ -71,7 +71,7 @@ public class Connect {
             this.out = new DataOutputStream(this.socket.getOutputStream());
         } catch (Exception e) {
             System.out.println("El servidor se encuentra en mantenimiento...");
-            
+
         }
 
     }
@@ -143,11 +143,10 @@ public class Connect {
         Thread thListenConnect = new Thread() {
             @Override
             public void run() {
-                while (socket!= null && !socket.isClosed()) {
+                while (socket != null && !socket.isClosed()) {
 
                     try {
                         chooseMSG();
-                        //sleep(1000);
                     } catch (Exception e) {
                         e.printStackTrace();
                         System.err.println(e);

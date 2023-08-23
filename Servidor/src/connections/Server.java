@@ -94,27 +94,26 @@ public class Server {
             System.out.println("Servidor ejecutandose...");
 
             Thread tfinal = new Thread() {
-                @Override
-                public void run() {
-                    while (running) {
 
-                        try {
-                            Socket cliente = toReceive();
-                            checkAll();
+    @Override
+    public void run() {
+        while (running) {
 
-                            chooseClientWay(cliente);
+            try {
+                Socket cliente = toReceive();
+                checkAll();
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            System.err.println(e);
-                        }
+                chooseClientWay(cliente);
 
-                    }
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.err.println(e);
+            }
 
-            };
-            tfinal.start();
         }
+    }
+
+    };tfinal.start();}
 
     }
 
@@ -134,36 +133,27 @@ public class Server {
     protected void startSupportServer() throws IOException {
         servers++;
 
-        Thread thSupport = new Thread() {
-            @Override
-            public void run() {
+        try {
+            ServerPresenter presenter2 = new ServerPresenter();
+            JServer view2 = new JServer();
 
-                try {
-                    ServerPresenter presenter2 = new ServerPresenter();
-                    JServer view2 = new JServer();
+            presenter2.setView(view2);
+            view2.setPresenter(presenter2);
 
-                    presenter2.setView(view2);
-                    view2.setPresenter(presenter2);
+            view2.start();
 
-                    view2.start();
+            view2.buildGame();
 
-                    view2.buildGame();
+            presenter2.connect(4800);
+            view2.getChat().getInfoServer().setText(presenter2.getServerInfo());
+            presenter2.setSupport();
 
-                    presenter2.connect(4800);
-                    view2.getChat().getInfoServer().setText(presenter2.getServerInfo());
-                    presenter2.setSupport();
+            view2.hideMy();
 
-                    view2.hideMy();
-
-                    sendMyClientsInQueue();
-                } catch (Exception e) {
-                    System.out.println("Ha ocurrido un error grave iniciando el servidor de soporte");
-                }
-
-            }
-
-        };
-        thSupport.start();
+            sendMyClientsInQueue();
+        } catch (Exception e) {
+            System.out.println("Ha ocurrido un error grave iniciando el servidor de soporte");
+        }
 
     }
 

@@ -21,23 +21,18 @@ public class CLWaiter extends Thread {
     public void run() {
         try {
             // envia un mensaje
-            this.out.writeUTF("Gracias por esperar, posicion en cola : " + pos);
+            //this.out.writeUTF("Gracias por esperar, posicion en cola : " + pos);
             // TO DO
             System.out.println("Alguien esta en espera");
-            Thread thWaiter = new Thread() {
-                @Override
-                public void run() {
-                    do {
-                        if (redirect) {
-                            redirectToServer();
-                        }
-                    } while (!redirect);
+
+            do {
+                if (redirect) {
+                    redirectToServer();
                 }
+                //Thread.sleep(1000); //opcion a quitar
+            } while (!redirect);
 
-            };
-            thWaiter.start();
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("Se desconecto alguien que estaba en espera");
         }
 
