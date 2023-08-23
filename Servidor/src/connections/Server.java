@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
+import app.App;
 import presenter.ServerPresenter;
 import view.JServer;
 
@@ -62,7 +63,7 @@ public class Server {
     public void startListening() throws IOException {
 
         if (support) {
-            
+
             System.out.println("Servidor de respaldo ejecutandose...");
 
             Thread t3 = new Thread() {
@@ -84,7 +85,7 @@ public class Server {
                         }
 
                     }
-                    //cerrar el servidor
+                    // cerrar el servidor
                 }
             };
             t3.start();
@@ -92,7 +93,7 @@ public class Server {
         } else {
             System.out.println("Servidor ejecutandose...");
 
-            Thread t1 = new Thread() {
+            Thread tfinal = new Thread() {
                 @Override
                 public void run() {
                     while (running) {
@@ -112,7 +113,7 @@ public class Server {
                 }
 
             };
-            t1.start();
+            tfinal.start();
         }
 
     }
@@ -132,26 +133,38 @@ public class Server {
 
     protected void startSupportServer() throws IOException {
         servers++;
-        ServerPresenter presenter2 = new ServerPresenter();
-        JServer view2 = new JServer();
 
-        presenter2.setView(view2);
+        Thread thSupport = new Thread() {
+            @Override
+            public void run() {
 
-        view2.setPresenter(presenter2);
+                try {
+                    ServerPresenter presenter2 = new ServerPresenter();
+                    JServer view2 = new JServer();
 
-        view2.start();
+                    presenter2.setView(view2);
+                    view2.setPresenter(presenter2);
 
-        view2.buildGame();
+                    view2.start();
 
-        presenter2.connect(4800);
-        view2.getChat().getInfoServer().setText(presenter2.getServerInfo());
+                    view2.buildGame();
 
-        presenter2.setSupport();
+                    presenter2.connect(4800);
+                    view2.getChat().getInfoServer().setText(presenter2.getServerInfo());
+                    presenter2.setSupport();
 
-        view2.hideMy();
+                    view2.hideMy();
 
+                    sendMyClientsInQueue();
+                } catch (Exception e) {
+                    System.out.println("Ha ocurrido un error grave iniciando el servidor de soporte");
+                }
 
-        sendMyClientsInQueue();
+            }
+
+        };
+        thSupport.start();
+
     }
 
     private void sendMyClientsInQueue() {
@@ -168,7 +181,7 @@ public class Server {
         try {
             CLWaiter temp = new CLWaiter(cliente, inQueue.size() + 1);
             inQueue.add(temp);
-            //crear hilo que habla con el que espera
+            // crear hilo que habla con el que espera
             Thread cola = new Thread(temp);
             cola.start();
 

@@ -19,6 +19,10 @@ public class Connect {
         this.color = color;
     }
 
+    public int getColor() {
+        return color;
+    }
+
     public Socket getSocket() {
         return socket;
     }
@@ -139,7 +143,7 @@ public class Connect {
         Thread thListenConnect = new Thread() {
             @Override
             public void run() {
-                while (!socket.isClosed()) {
+                while (socket!= null && !socket.isClosed()) {
 
                     try {
                         chooseMSG();

@@ -35,6 +35,7 @@ public class ClientPresenter {
             view.showInfo("no hay conexion");
             if (view.showYes() == 0) {
                 this.model = new Connect();
+                this.model.setColor(model.getColor());
             }
         }
     }
